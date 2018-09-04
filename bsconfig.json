@@ -1,5 +1,5 @@
 {
-  "name": "lifx-bindings",
+  "name": "bs-node-lifx-lan",
   "version": "0.1.0",
   "sources": {
     "dir": "src",
