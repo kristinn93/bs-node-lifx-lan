@@ -1,10 +1,18 @@
 type t;
-[@bs.module] external lifx: t = "node-lifx-lan";
+[@bs.module] external make: t = "node-lifx-lan";
 
 [@bs.deriving {jsConverter: newType}]
 type options = {duration: int};
 [@bs.send] external turnOnAll: (t, abs_options) => unit = "turnOnBroadcast";
+let turnOnAll = (~options=?, ()) =>
+  Belt.Option.getWithDefault(options, {duration: 100})
+  |> optionsToJs
+  |> turnOnAll(make);
 [@bs.send] external turnOffAll: (t, abs_options) => unit = "turnOffBroadcast";
+let turnOffAll = (~options=?, ()) =>
+  Belt.Option.getWithDefault(options, {duration: 100})
+  |> optionsToJs
+  |> turnOffAll(make);
 type light;
 type error;
 
@@ -17,21 +25,9 @@ let discover = lifx =>
   discover(lifx)
   ->(FutureJs.fromPromise(handleError))
   ->(Future.mapOk(value => Belt.List.fromArray(value)))
-  ->(Future.mapError(_err => Belt.Result.Error("asdf")));
-
-/* turnOnAll(lifx, optionsToJs({duration: 1000})); */
-turnOffAll(lifx, optionsToJs({duration: 1000}));
-/*
- let bulbs =
-   lifx
-   ->discover
-   ->(
-       Future.get(res =>
-         switch (res) {
-         | Belt.Result.Ok(lights) =>
-           lights->Belt.List.getExn(0)->Js.log;
-           lights->Belt.List.getExn(0)->turnOffBulb;
-         | Belt.Result.Error(msg) => msg->Js.log
-         }
-       )
-     ); */
+  ->(
+      Future.mapError(_err => {
+        Js.log(_err);
+        Belt.Result.Error("asdf");
+      })
+    );
