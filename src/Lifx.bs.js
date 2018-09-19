@@ -32,8 +32,8 @@ function handleError(prim) {
   return String(prim);
 }
 
-function discover(lifx) {
-  return Future.mapError(Future.mapOk(FutureJs.fromPromise(lifx.discover(), handleError), Belt_List.fromArray), (function (_err) {
+function discover() {
+  return Future.mapError(Future.mapOk(FutureJs.fromPromise(NodeLifxLan.discover(), handleError), Belt_List.fromArray), (function (_err) {
                 console.log(_err);
                 return /* Error */Block.__(1, ["asdf"]);
               }));

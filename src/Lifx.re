@@ -21,8 +21,8 @@ type error;
 
 [@bs.send] external discover: t => Js.Promise.t(array(light)) = "";
 let handleError = Js.String.make;
-let discover = lifx =>
-  discover(lifx)
+let discover = () =>
+  discover(make)
   ->(FutureJs.fromPromise(handleError))
   ->(Future.mapOk(value => Belt.List.fromArray(value)))
   ->(
